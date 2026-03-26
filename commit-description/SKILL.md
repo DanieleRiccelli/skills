@@ -1,7 +1,7 @@
 ---
 name: commit-description
 description: Writes commit descriptions. Use when creating a commit or when the user asks to summarize changes for a commit.
-allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*)
+allowed-tools: Bash(git add.), Bash(git status:*), Bash(git commit:*)
 ---
 
 When writing a commit description:
@@ -24,3 +24,5 @@ One sentence explaining what this commit does.
 ```
 
 Use conventional commit types: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `build`, `ci`. The scope is optional and should reflect the area of the codebase (e.g. `auth`, `api`, `ui`).
+
+**NEVER** add a `Co-Authored-By` trailer or any Claude/AI attribution to the commit message.

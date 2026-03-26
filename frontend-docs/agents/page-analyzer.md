@@ -45,7 +45,7 @@ Scan templates/JSX for interactive elements and their outcomes:
 
 For each action, describe the **consequence** (e.g. "submitting saves and shows a confirmation toast" not "calls POST /api/users").
 
-### Step 4 — Identify Relevant Behaviors
+### Step 4 — Identify Relevant Behaviors and Anomalies
 
 Look for conditional logic visible to the user:
 - **Empty states**: what is shown when there is no data
@@ -55,57 +55,81 @@ Look for conditional logic visible to the user:
 - **Real-time updates**: data that refreshes automatically
 - **Validation**: inline form validation messages
 
-Only document behaviors the user would notice. Skip internal error handling not surfaced in the UI.
+Also note any observable anomalies: UI labels that appear incorrect, features that are present in the template but non-functional (disabled, commented out, returning empty data), or inconsistent behaviors the user would notice. These become `*Nota:*` entries.
 
-### Step 5 — Determine Access
+Only document behaviors and anomalies the user would notice. Skip internal error handling not surfaced in the UI.
+
+### Step 5 — Collect Distinctive UI Labels
+
+Gather the most distinctive labels from this page: button texts, section titles, column headers, state labels, placeholder texts. These are used by the assembler for Section 7. Return them as a comma-separated list in the output alongside the file.
+
+### Step 6 — Determine Access
 
 Use `role_restricted` from the page object and any route guard / middleware metadata to determine:
-- `libero` if no auth restriction
-- `riservato a: [lista ruoli]` if restricted — use role names from the codebase (e.g. `admin`, `manager`, `viewer`)
+- `Tutti i ruoli autenticati` if authenticated but no role restriction
+- `Solo [RUOLO]` if restricted to one role
+- `[RUOLO1] e [RUOLO2]` if restricted to multiple roles
+- `Pubblico` if no authentication required
 
-### Step 6 — Write the File
+### Step 7 — Write the File
 
 Write `_doc_[page-id].md` to the project root with this exact structure:
 
 ```markdown
-## [Label Pagina]
+### [N]. [Label Pagina]
 
-**Scopo:** one sentence describing what this page allows the user to accomplish.
+**Rotta:** `/route` — **Accesso:** [access as determined in Step 6]
 
-**Azioni disponibili:**
-- Each bullet is a user action with its outcome
-- Use real UI labels for buttons and fields
-- If the page has significant sub-sections (tabs, panels), group actions under sub-headings
+[One or two flowing prose paragraphs describing the page. Write in continuous Italian sentences.
+Describe what the user sees, what they can do, and what happens as a result. Use real UI labels
+inline within the text, quoted naturally (e.g. il pulsante "Salva", il filtro "Seleziona stato").
+If the page has sub-sections (tabs, form sections, wizard steps), introduce each with its bold
+label inline, followed by a prose description on the same line or the next sentence.
+Example:
+"La pagina mostra un elenco paginato delle abitazioni con ricerca per nome e filtro per stato.
+Per ogni riga sono disponibili le azioni di apertura del link, navigazione al dettaglio, copia
+negli appunti e attivazione/disattivazione. Il pulsante "Nuova casa" porta al form di creazione."]
 
-**Comportamenti rilevanti:**
-- Each bullet is a user-visible behavior (empty state, error, validation, conditional UI)
-- Skip if none are notable
+[If the page has notable empty/error/conditional behaviors, add a closing prose sentence or two
+describing them naturally. Use phrases like "Nel caso in cui...", "Qualora...", "Se l'utente...".
+Skip entirely if there is nothing notable.]
 
-**Accesso:**
-- libero
+*Nota: [any observable anomaly — wrong label, non-functional feature, inconsistent behavior.
+Use one *Nota:* line per distinct anomaly. Omit entirely if the page has no anomalies.]*
 ```
 
-If the page has internal tabs or major sub-sections, add sub-headings inside `Azioni disponibili`:
+If the page has internal tabs, wizard steps, or clearly separated form sections with their own titles,
+use bold inline labels to introduce each section within the prose flow:
 
 ```markdown
-**Azioni disponibili:**
+### [N]. [Label Pagina]
 
-### Tab: [Nome Tab]
-- action 1
-- action 2
+**Rotta:** `/route` — **Accesso:** [access]
 
-### Tab: [Nome Tab]
-- action 1
+[Brief intro sentence describing the page structure, e.g. "Il flusso si articola in tre passaggi:"]
+
+**[Nome sezione/step]** — [prose description of what the user does and sees in this section.]
+
+**[Nome sezione/step]** — [prose description.]
+
+[Closing sentence about save/submit behavior and any notable states.]
+
+*Nota: [anomaly if any]*
 ```
 
 ## Rules
 
 - **No technical details**: no class names, method names, API endpoints, state management patterns, libraries
 - **Italian language** for all content
-- **Real UI labels** only — never use file names or variable names as labels
+- **Real UI labels** only — never use file names or variable names as labels. Quote them with Italian quotes when used inline.
 - **User perspective** always — describe what the user sees and does, not what the code does
-- If the entry_point file is not found, note it in the file and document what can be inferred from the route and component name
+- **Prose for page content**: describe pages in continuous sentences, not bullet lists
+- **Bold inline labels** for sub-sections (tabs, steps, form sections) — introduce them within the prose flow, not as H3 headings
+- **`*Nota:`** in italics for anomalies/bugs — factual, neutral tone, one line per anomaly
+- If the entry_point file is not found, note it and document what can be inferred from the route and component name
 
 ## Output
 
-Write `_doc_[page-id].md` and return a one-line summary of the page for the orchestrator.
+Write `_doc_[page-id].md` and return to the orchestrator:
+1. A one-line summary of the page
+2. The list of distinctive UI labels collected in Step 5

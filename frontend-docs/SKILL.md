@@ -53,7 +53,9 @@ Pass each agent:
 Agents can run in parallel. Each agent writes a `_doc_[page-id].md` file to the project root.
 
 After all agents complete:
-- List all generated `_doc_*.md` files with a one-line summary for each
+- Collect the one-line summary and the distinctive UI labels list returned by each agent
+- Build a `labels_by_page` map: `{ [page-id]: [labels list] }`
+- List all generated `_doc_*.md` files with the one-line summary for each
 - Halt and wait for confirmation
 
 > ⏸️ **CHECKPOINT 2** — Show the file list and wait for explicit confirmation before proceeding.
@@ -73,6 +75,7 @@ Pass it:
 - Any sections to include/exclude globally
 - Any additional notes from the user
 - The page hierarchy from `_pages_map.json`
+- The `labels_by_page` map collected at the end of Phase 2
 
 The agent writes `DOCUMENTAZIONE_FUNZIONALE.md` to the project root.
 

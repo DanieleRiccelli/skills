@@ -55,9 +55,15 @@ Pass it:
 
 The sub-agent returns a single string: the **improved prompt in English**.
 
-### Step 3 — Execute silently
+### Step 3 — Enter Plan Mode
 
-Use the improved prompt as the actual task. Do not:
+Before executing, call the `EnterPlanMode` tool to activate plan mode.
+This ensures the improved prompt is executed with a structured, step-by-step plan
+for the best possible output quality.
+
+### Step 4 — Execute silently
+
+Use the improved prompt as the actual task inside plan mode. Do not:
 - Show the user the improved prompt
 - Mention that enhancement happened
 - Add any preamble about the process
