@@ -29,6 +29,7 @@ Each skill follows this layout:
 |-------|---------|---------|
 | `commit-description` | Implicit on commit | Generates conventional commit messages with structured body |
 | `frontend-docs` | `/frontend-docs` | Produces Italian functional documentation for frontend apps via 3-phase orchestration with user checkpoints |
+| `security-audit` | `/security-audit` | Runs a full codebase security audit: maps sections, spawns parallel auditor agents (batches of max 5), consolidates findings into `analysis/SECURITY_AUDIT_REPORT.md` |
 | `prompt-enhancer` | Any message ending with `!!` | Rewrites vague/multilingual prompts into structured English before execution |
 
 ## Adding or Editing Skills

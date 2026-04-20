@@ -42,9 +42,24 @@ Supports Angular, React, Vue, Next.js, Nuxt, Svelte, and more. Output is in Ital
 
 ---
 
+### `security-audit`
+
+Performs a comprehensive security audit of the entire codebase through a 3-phase orchestration with a single user checkpoint, using parallel sub-agents for efficient analysis.
+
+**Trigger:** `/security-audit`
+
+**Phases:**
+1. **Section mapping** — detects project type, proposes a logical division (by feature / page / layer / module / mixed) for review
+2. **Parallel audit** — spawns sub-agents in batches of max 5 to audit each section; each writes `analysis/<section-id>.md`
+3. **Consolidation** — merges findings, deduplicates, identifies systemic patterns, writes `analysis/SECURITY_AUDIT_REPORT.md`
+
+Findings are classified by severity (Critical → Informational) and confidence (Confirmed → Possible), and mapped to OWASP Top 10 when applicable. Every finding cites `file:line`, includes impact, and proposes actionable remediation. Output is in Italian.
+
+---
+
 ### `prompt-enhancer`
 
-Intercepts vague or multilingual prompts and rewrites them into clear, structured English before execution.
+Intercepts vague or multilingual prompts and rewrites them into clear, structured English before execution. The enhancer is context-aware: it reads the project's stack/conventions and conversation history to produce grounded rewrites, not generic ones.
 
 **Trigger:** any message ending with `!!`
 
@@ -52,8 +67,14 @@ Intercepts vague or multilingual prompts and rewrites them into clear, structure
 ```
 fix this bug !!
 crea una funzione python !!
-Ho bisogno di fare una modifica ... !!
+continua con la prossima fase !!
 ```
+
+**Key behaviors:**
+- **Context-aware**: reads `CLAUDE.md` and conversation history to ground the rewrite in the actual project
+- **Multi-turn support**: follow-up prompts like `"continua !!"` are resolved using conversation context
+- **Clarify, don't invent**: the enhancer makes intent explicit without adding requirements the user didn't ask for
+- **Adaptive execution**: simple tasks run directly, complex ones enter plan mode automatically
 
 The enhancement happens silently — the user sees only the final answer.
 
@@ -88,6 +109,7 @@ cd ~/claude-skills
 # Link individual skills
 ln -s $(pwd)/commit-description ~/.claude/skills/commit-description
 ln -s $(pwd)/frontend-docs ~/.claude/skills/frontend-docs
+ln -s $(pwd)/security-audit ~/.claude/skills/security-audit
 ln -s $(pwd)/prompt-enhancer ~/.claude/skills/prompt-enhancer
 ```
 
