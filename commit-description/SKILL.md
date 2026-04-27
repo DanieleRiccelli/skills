@@ -9,7 +9,7 @@ When writing a commit description:
 
 1. Run `git add -A` to stage all modified, added, and deleted files.
 2. Run `git diff --cached` to see staged changes.
-3. Run `git status` to get a clear picture of added, modified, or deleted files.                                                                                                                                                                                                              
+3. Run `git status` to get a clear picture of added, modified, or deleted files.
 4. If `package.json` was modified, extract the new version from it.
 5. Analyze the changes and write a commit message **always in English**, regardless of the language used by the user, in this format:
 
@@ -28,3 +28,8 @@ One sentence explaining what this commit does.
 Use conventional commit types: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `build`, `ci`. The scope is optional and should reflect the area of the codebase (e.g. `auth`, `api`, `ui`).
 
 **NEVER** add a `Co-Authored-By` trailer or any Claude/AI attribution to the commit message.
+
+## Execution mode
+
+- **Slash command** (`/commit-description`): after composing the message, execute `git commit` directly without asking for confirmation.
+- **Natural language request** (e.g. "create a commit", "write the commit message"): output the commit message text only — do not run `git commit`.
