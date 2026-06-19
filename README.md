@@ -80,6 +80,21 @@ The enhancement happens silently — the user sees only the final answer.
 
 ---
 
+### `prd-generator`
+
+Reconstructs a **Product Requirements Document** from an existing codebase through a 3-phase orchestration with a single user checkpoint, using parallel sub-agents to write each PRD block.
+
+**Trigger:** `/prd-generator` (optional flag: `--with-economics` to collect economic data interactively)
+
+**Phases:**
+1. **Scan & mapping** — detects project type/stack, maps modules to functional requirements, decides conditional blocks (e.g. AI), writes `_prd_scan.json` for review
+2. **Parallel block writing** — spawns sub-agents in batches of max 5; each writes one PRD block to `_prd_NN_<block>.md`
+3. **Assembly** — composes `PRD-<project>.md`, resolves section numbering, inserts the economic placeholder, appends a "Note di generazione" validation appendix, and cleans up temp files
+
+Formatted in the Nextadv PRD/SRS style (no header image). Strictly separates code-derivable facts from inferred hypotheses, and never invents non-derivable data (client, project code, version, economics, timeline) — those become `[DA COMPILARE]` placeholders. Output is in Italian.
+
+---
+
 ## Structure
 
 ```
@@ -111,6 +126,7 @@ ln -s $(pwd)/commit-description ~/.claude/skills/commit-description
 ln -s $(pwd)/frontend-docs ~/.claude/skills/frontend-docs
 ln -s $(pwd)/security-audit ~/.claude/skills/security-audit
 ln -s $(pwd)/prompt-enhancer ~/.claude/skills/prompt-enhancer
+ln -s $(pwd)/prd-generator ~/.claude/skills/prd-generator
 ```
 
 ## Adding a new skill
